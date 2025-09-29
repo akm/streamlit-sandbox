@@ -3,7 +3,7 @@ default: up dev
 
 .PHONY: dev
 dev:
-	streamlit run my_first_app.py
+	streamlit run database_app.py
 
 .PHONY: up
 up:
