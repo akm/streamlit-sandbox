@@ -1,0 +1,25 @@
+name: "streamlit-localdev"
+services:
+  mysql:
+    image: mysql:8.0.38
+    hostname: mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: streamlit_db
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_ROOT_HOST: "%"
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data/mysql/log/:/var/log/mysql
+      - ./data/mysql/data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 60s
+      retries: 20
+    networks:
+      - network1
+
+networks:
+  network1:
