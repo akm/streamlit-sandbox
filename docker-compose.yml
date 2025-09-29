@@ -21,5 +21,33 @@ services:
     networks:
       - network1
 
+  wait4mysql:
+    depends_on:
+      mysql:
+        condition: service_healthy
+    image: wait4x/wait4x:latest
+    command:
+      - mysql
+      - "root@tcp(mysql:3306)/streamlit_db"
+      - "--timeout"
+      - "30s"
+    networks:
+      - network1
+
+  mysql-cli:
+    depends_on:
+      wait4mysql:
+        condition: service_completed_successfully
+    volumes:
+      - ./database.sql:/database.sql
+    image: mysql:8.0.38
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mysql -h mysql -u root streamlit_db < /database.sql
+    networks:
+      - network1
+
 networks:
   network1:
